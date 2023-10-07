@@ -1,0 +1,522 @@
+ I. INTRODUCTION 
+HE REACTIVE PROGRAMMING (RP) is the 
+fashionable but not large-scale trend in the software 
+development technology. 
+The RP as a programming paradigm is not entirely new: 
+this one is an event programming on data flows with using of 
+well-knowning patterns. By its nature the RP is closer to 
+functional programming than to the OOP. 
+The RP is not design methodology as the OOP but it is 
+very convenient as an application development tool [1, 2] 
+including graphic interface development tool based on the 
+event model. 
+Despite the RP applied nature the paradigm can be 
+discussed in some acpects: 
+• relationships between the RP and the OOP; 
+• the RP in the distributed systems; 
+• the RP in the IoT architecture. 
+In the proposed paper the version of organic inclusion of 
+RP into the OOP environment are considered. Also means of 
+objects’ synchronization based on principles close to the RP 
+are considered. 
+The annotation means and the Java meta-system are using 
+as the simplest technology solution for embedding the 
+necessary event programming mechanisms in the Java code 
+for their maximum transparency. 
+The proposed ideas and solutions are displayed onto the 
+IoT architecture in a natural way: an object as an entity is a 
+basic class for component programming both an object (a 
+device) and server and client applications. This one creates a 
+methodological and technological unity of IoT design and 
+programming. 
+
+
+II. PROBLEM DEFINITION 
+A.   Reactive Programming + OOP = Reactive OOP 
+Reactive programming ideas and the OOP ideas lie in the 
+different planes. The OOP is based on the command flows 
+model and the RP is based on the event programming and the 
+data flows model. They can not be put on the same level 
+historically and technologically: during for about 30 years 
+the OOP exists as a means of describing, modeling and 
+methodology of system design and development environment 
+and the RP exists in the form of patterns, frameworks or 
+libraries. 
+The OOP is against discrimination of data in 
+structured programming. In many ways the OOP 
+emergence was connected with an at-tempt to move away 
+from traditional discrimination of data in the “algorithm + 
+data = programm” connection in structured programming. 
+The syntactical description of the control flow as “function 
+⎯ function call ⎯ function ⎯ function call” puts the data 
+flow on a dependent position: the data conversion sequence 
+is not traced in the programm text in explicit form. 
+The syntactical description of the code execution looks like 
+“object ⎯ method call in the object ⎯ method ⎯ available 
+object ⎯ method call” in OOP. Thus the equality of data and 
+algorithm (methods) are ensures at least formally. 
+Event processing in the OOP environment. The event 
+model is almost always used in programming of graphic user 
+interface (GUI). 
+Reactive programming as a pattern. The reactive 
+programming ideas are implemented as patterns, frameworks 
+or libraries and are not components of the OOP environment.
+
+
+III. KEY IDEAS 
+Elements of reactive programming are built into the OOP
+system based on the inheritance of a range of abstractions. A 
+range of abstractions has the analogy in OOP and the 
+reactive prefix. This is done both conceptually and 
+technologically. The annotations and reflexions are widely 
+used in Java during implementing. The annotations and 
+reflexions let to hide the event programming mechanisms 
+from the user by means of excluding from program text. 
+The reactive programming components are used in the 
+OOP environment along with the traditional ones; the system 
+is not totally reactive. 
+
+A. Value-Event, Reactive Field (property) 
+The basic idea of the event programming principles 
+integration is that any change of the variable value is 
+considered as an event, and the next value is considered as an 
+event attribute. Thus in the variable the list of values-events 
+is created (Fig. 1), each moment the list current status is 
+determined by a number of conditions: 
+• the last value is considered as current value at 
+synchronous access to a variable; 
+• sequence of assignments to the variable of a values 
+series (for example a = 5, a = 6, a = a + 3) calls the 
+suitable event flow and writing values to the list; 
+• values storage and utilization in the list are determined 
+by the asynchronous programming processes; 
+asynchronous programming processes use these 
+values, for example, by calling the reactive methods of 
+classes. 
+Values-events are supported by the abstractions of the 
+reactive value item (RVI) and the reactive field (RF). 
+Derivative classes of reactive variables are created for 
+primitive types and other entities used as events on their 
+basis.
+The reactive class (RC) supports the “history” of change 
+for own reactive fields. 
+The usual syntactic constructions of classes should be 
+provided with annotations for the reactive components 
+determining. The components should be inherited from the 
+abstractions of the reactive programming system:
+
+B. Reactive Method 
+Event programming is asynchronous so functions 
+(methods) of event handling are called by received messages 
+(events) rather than obviously code of class. The reactive 
+method (RM) is called asynchronously for a set (tuple) of 
+values-events in the reactive fields of class. 
+The accordance of formal parameters and actual 
+parameters (reactive fields). The mechanism of the reactive 
+method calling is not as simple as the usual synchronous 
+calling (Fig. 2): 
+• the method formal parameters must be matched only 
+by reactive fields — the event sources in the class. In 
+general for maintain of the principle of asynchrony 
+would be enough to leave only one field be reactive; 
+• as far as the reactive method does not have an obvious 
+call in the class code it is necessary to define in 
+general the algorithm of receiving the next events
+values tuple that becomes formal call parameters. This 
+algorithm is implemented by the method data 
+processor (MDP), processor name is in the reactive 
+method header as a signature; 
+the signature can contain additional parameters. The 
+additional parameters set the accordance between the 
+method formal parameters and the reactive fields; 
+• the data processor determines the method of the 
+selection of the next tuple, the transfer the tuple to the 
+method, and the removing events that called the 
+method.
+Reactive methods of class share the lists of values-events. 
+Obviously execution of values-events should be transparent 
+to each other. For this each value-event has a counter of 
+references of entries in the tuples of methods. The references 
+of entries are correcting by asynchronous calls. Thus it is 
+possible to delete the used values (garbage collection). 
+Signatures of the reactive method. The logic for 
+selecting tuples of events and the working of data processors 
+for some signatures is represented figuratively in Fig. 3. The 
+method headings using such signatures are presented in the 
+text. Similar examples are described in [9]. 
+zip ⎯ group selection by one value from each field.  
+The triggering condition is at least one value in each field presence. 
+The field names are indicated in the method 
+parameters annotations. After the method is executed each 
+field is changed to the next value. 
+
+merge ⎯ merger several annotated input fields into one 
+field. The “oldest” value is selected from the field group; 
+passed to the method input contained the only formal 
+parameter. The list of input fields is indicated in the method 
+signature. Only the selected value is removed from the lists 
+after the method calling. 
+
+polling ⎯ is similar to the previous one but annotated 
+entries are polled “round” with the expectation of the value 
+appearance in the next field. 
+
+prior ⎯ priority choice: the first parameter is selected in 
+pairs with all subsequent values of the second parameter until 
+a new value of the first parameter appears. 
+pairs ⎯ grouping in pairs by several inputs on the arrival 
+time. 
+ord ⎯ conditional merger: the minimum is chosen from a 
+next values pair from two inputs according to the available 
+comparison method (usual merger of increasing sequences). 
+
+C. Reactive Class 
+The reactive class (RC) includes the set of reactive fields 
+and methods. This is already sufficient for the RC objects 
+asynchronous action. For technological details see section IV 
+“The Reactive OOP Framework”. 
+D. Inheritance of Reactive Classes 
+The inheritance principle is applicable to reactive classes. 
+The derived class of the reactive class inherits RC reactive 
+fields and can use the base class reactive fields in their own 
+methods. Polymorphism in reactive classes has one feature: 
+base class overlapped methods should not take part in the 
+processes of selecting and processing of the events-values. 
+They must be excluded at the meta-level of the reactive class 
+description. In accordance with the asynchronous call logic 
+all methods are called on data flows independently of each 
+other. This principle should not work in case of overlapping. 
+An obvious call of the base class method is valid. 
+
+E. Communications of Events — Linking and 
+Synchronizing Fields and Objects 
+Event programming in a reactive objects group can be 
+done by directly recording the objects reactive fields 
+accessible via links: in the reactive class asynchronous 
+method can be taken a reference to another object. A record 
+will be made in reactive field of another object. The events 
+propagation through the objects network within the same 
+process can be provided this way. 
+The syntax of objects communicatios is simplified. 
+Communications is carried out beyond the classes methods if 
+services for linking and synchronizing the fields of reactive 
+objects and objects in general will be create. 
+Local synchronization of fields and objects within an alone 
+process is set by transferring mutual direct links to fields and 
+objects.  
+• at the local synchronization of fields a value recording 
+in the reactive field is followed by value cloning into 
+the linked fields of other objects; 
+• the local synchronization of objects is executed no 
+higher the common base class level. For all linked 
+objects is executed the suitable recording in the 
+identical field if the field value in one class was 
+changed. 
+F. Distributed System of Reactive OOP 
+To go to a distributed system it is enough to ensure 
+synchronization of fields and objects via a network 
+connection. This requires: 
+• the naming/identifying network node agreement, the 
+object and the object execution environment (context); 
+• symmetric bidirectional protocol for contra flows of 
+synchronization in linked nodes. 
+The network synchronization service for fields and objects 
+is created o n this base on the whole. The connection 
+between synchronized fields or objects can be considered as 
+an analogy of a logical channel in a network where channel 
+subscribers are fields or objects. When the event-value enters in the object field it is 
+transfers via all defined links where it is reproduced as a 
+similar event in each receiver field. Similar ideas for 
+distributed systems are considered in [3]. 
+
+F. Distributed System of Reactive OOP 
+To go to a distributed system it is enough to ensure 
+synchronization of fields and objects via a network 
+connection. This requires: 
+• the naming/identifying network node agreement, the 
+object and the object execution environment (context); 
+• symmetric bidirectional protocol for contra flows of 
+synchronization in linked nodes. 
+The network synchronization service for fields and objects 
+is created o n this base on the whole. The connection 
+between synchronized fields or objects can be considered as 
+an analogy of a logical channel in a network where channel 
+subscribers are fields or objects.When the event-value enters in the object field it is 
+transfers via all defined links where it is reproduced as a 
+similar event in each receiver field. Similar ideas for 
+distributed systems are considered in [3].
+
+
+IV. THE REACTIVE OOP FRAMEWORK 
+The reactive OOP framework [5] for Java supports the 
+listed above ideas using run-time annotations. It allows to 
+dynamically embedding the necessary data structures for the 
+event programming system action into reactive classes. 
+A. The Execution Environment, the Context, the Events 
+Synchronization 
+In the event programming system the event processing 
+must be carefully synchronized for the following reasons: 
+• the events linked with network synchronization are 
+generated by messages received by network drivers in 
+separate flows; 
+• the events generated by the current event processing 
+must be planned for execution after the current event 
+ending. 
+The event manager is used for event planning. Also event 
+manager is used for supporting queue. 
+The events are the items of queue. The event contains a 
+reference to the reactive object where the conditions for 
+reactive methods calling are checked. 
+The object of the reactive code execution environment is 
+named the context. 
+There is the scheduler in each context. The scheduler 
+organizes the request queue for execution of any code related 
+to this instance of the environment (the event manager, 
+synchronization messages from the network, actions on 
+objects from the external client or server code). 
+The queries from queue are executed in a separate flow 
+one by one provided their mutual synchronization towards to 
+context data. 
+B. Meta-System for Describing Components of Reactive 
+OOP 
+Objects of reactive classes and their links can be set by the 
+programmer statically (i.e. by defining in the program text 
+named objects and their binding by named references). 
+For dynamic development and binding of reactive objects 
+system by an external description a meta-level is needed for 
+describing the reactive OOP system entities: classes (RC 
+Descriptor, RCD), fields (RF Descriptor, RFD), methods 
+(RM Descriptor, RMD) and their parameters (Fig. 4). 
+The meta-level is built on the base of analysis of the 
+reactive classes’ annotations and their components using the 
+Java reflection. 
+The meta-level has direct references to the corresponding 
+Java meta-level objects: Class, Field and Method. 
+The objects of reactive classes and fields contain 
+references to meta-level objects-descriptors. 
+C. Local Synchronization of Fields and Objects 
+Locally synchronized fields (objects) save mutual 
+refernces to each other. The direct references are keeped for 
+synchronized fields. The redirectors are created for objects. 
+The redirectors contain a reference to the opposite object and 
+the general level of the base class the synchronization 
+extends at. 
+Various solutions are used to exclude message looping: 
+semantic division of fields into input and output fields based 
+on analysis of method annotations, the exception of returning 
+of the synchronizing message to an object received from this 
+object. 
+D. Network Synchronization of Fields and Objects 
+The data structurs of the synchronization protocol (Fig. 5) 
+of fields and objects look almost identical: 
+• the synchronized components contain redirector tables 
+(NetClassRedirector). The redirector has a reference to 
+the network connection driver (LoopDriver) and the 
+link identifier (token). The base class general level up 
+to which the level can be synchronized is needed to 
+synchronize objects; 
+• the network driver generates the link identifie. The 
+network driver serves as a key for defining the 
+correspondence of the received data and the 
+component they are intended for. In the connection 
+both drivers generate own tokens and exchange tokens 
+when connecting. The accordance of the transmission 
+token (ts) and the reception token (tr) is saved in the 
+hash-tables. 
+When a connection is established the initiator sends 
+character data to identify the synchronization object ⎯ class, 
+name (token). On initiator side it is enough reference to the 
+object. Drivers generate and exchange tokens, create 
+redirectors and fill in the hash-tables of the tokens 
+correspondence (Ts/Tr Hash). 
+When the value of the any object reactive field is changed 
+all of its network redirectors are viewed. A synchronization 
+message (MsObjectValue) containing a link token, a field 
+name and a serialized value are sent to the selected drivers. 
+At the receiving end the transmission token is consider as a 
+reception token, the own link token is selected by the hash
+table and the linked object is identified by it. 
+The value is written in its field transmitted by name. The 
+protocol is symmetric for both the transmission of 
+synchronized values and the procedure for connecting and 
+breaking communications. 
+E. OO-Notation of Bidirectional Client-Server Protocol 
+It is necessary to manage the contra flows of the 
+synchronization primitives for network synchronization: 
+• in relation to the message transfer drivers the 
+primitives are asynchronous in relation to each other, 
+the next synchronization message may appear during 
+the transmission and processing of the previous ones; 
+• the synchronization message is desirable accompany 
+with a confirmation ⎯ server response, i.e. the 
+interaction primitive must be built according to the 
+command-response scheme. 
+Thus a network service is required for multiple contra 
+flows of interaction with command-response type. A network 
+service can be overbuilt above an ideologically similar 
+MQTT-protocol and MQTT-broker [6] but in this case a 
+balanced solution is developed taking into account all 
+requirements: 
+• the linear message driver supports two contra flows of 
+serialized objects with message queue support (with a 
+dispatcher on own thread) and a receive stream on 
+each side; 
+• for parallel commandtransmission and processing 
+outgoing messages are sequentially numbered and 
+saved on the transmitting side with objects containing 
+the completion processing code. When a response is 
+received the accordance is determined by comparing 
+the stored sequence number. 
+Also the original object-oriented notation (OO notation) is 
+applied (Fig. 6) when implementing a set of interaction 
+primitives. In usual function-oriented notation the protocol 
+instruction set is applied as follows: 
+• all protocol commands in the server part are in the 
+same module; 
+• there are message formats with a fixed parameter set 
+and attachable serializable data objects dependent on 
+specific commands for all commands and responses; 
+for command execution the message is sent. The 
+message contains a command code in one of the 
+parameters. There is a switch for this code in server 
+part. 
+Fig. 6. The client-server protocol on OO-notation. 
+The protocol command system OO-notation is 
+implemented as a set of derived classes of message with 
+built-in processing functionality in the server and client parts 
+of the protocol: 
+• the client creates a message-command of the 
+appropriate derived class for command executing; 
+• the receiving server protocol component executes the 
+polymorphic method handleOnServer in the received 
+object class passing the service context of the current 
+connection; 
+• in the method handleOnServer the standard message
+response is generated if the client does not process the 
+response thoughtfully; or the class object with 
+response data is created; 
+• the received object is associated with the message
+command sent it; in the object-command class the 
+handleOnClient method is executed; the client service 
+context is passed to the method. Completing of the 
+response processing is accompanied by an 
+asynchronous callback of one of the methods in the 
+context of the process executed the call. 
+Within the confines of proposed model the protocol is a set 
+of classes-commands and classes-responses with the 
+prescribed methods created the necessary pairs and possibly 
+the chains of interactions. 
+V. THE REACTIVE OOP IN THE INTERNET OF 
+THINGS 
+A. “Thing” as a Unified Entity in a Distributed IoT
+System 
+In the most IoT-platforms the information (object) model 
+of “thing” (device) is used only in the network nodes where 
+“thing” is present or in the network nodes to which “thing” is 
+commutated [7, 8]. 
+The reactive OOP makes it possible to extend the thing 
+model as a reactive class to all network nodes and the 
+synchronization resources ⎯ to project its actual state along 
+the whole chain of connections [4] (Fig. 7).
+The base class of the entity “thing” is used in the following 
+variants: 
+• the abstract entity as a set of reactive fields: the thing 
+state and the thing management; 
+• the driver is a derived class in the controller that 
+controls the thing (device). The reactive methods are 
+activated by reactive fields through corresponding 
+control actions (for example the data stream switching 
+on/off from the device). The data transmitted by the 
+device is asynchronously written to the reactive fields; 
+• the object of the thing’s base class is synchronized 
+with the object of the device's base class at server side.  
+A derived class through reactive methods implements 
+server functionality, for example, monitoring, 
+collecting of device operation statistics or recording a 
+state in a database; 
+• in the client application the thing's base class object is 
+synchronized with a similar server object, the derived 
+class methods are used to control the view. 
+For programming an important advantage is the unity of 
+the component representation in the distributed network and 
+the possibility of reusing the code. 
+B. IoT-Server Architecture 
+The IoT-system server implemented on the reactive OOP 
+principles not only commutes the synchronized data flows 
+but also contains information about the general system 
+infrastructure. 
+On its basis users can deploy own configuration of things, 
+server models and client applications (Fig. 8).
+The server generates unique identifiers-tokens for dynamic 
+identification of the created objects. Clients and things 
+(devices) receive tokens as response on requests for objects 
+creating or as attributes of available objects lists received 
+from the server through the API. 
+The server contains registries of users, reactive classes, 
+field types, device types. Each user has a registry of 
+registered devices and a registry of models. 
+The executable configuration of reactive objects on the 
+server side is called a model. 
+The model is a meta-description contained the names of 
+the server objects, their types (classes) and links and other 
+data ⎯ initial settings, starting actions, etc. 
+The server deploys the model creating a separate context 
+for it. The names of variable and tokens are written to the 
+object registry. 
+C. Registration and Authorization of Things (devices) 
+The user of the IoT-server and its client applications are 
+authorized on the server in the usual way and have access to 
+own profile. 
+They can deploy models and get information about the 
+contexts content the models are executed in including the 
+types and tokens of reactive objects. 
+A client application supported a certain type “thing” 
+(device) can create a corresponding reactive object and 
+associate it with the same object in the selected server 
+context. 
+An additional registration procedure is required for the 
+device. The device is required to link to the user profile so 
+next turned on device can automatically connect to the model 
+deployed for device or deploy the necessary model: 
+• the server contains a device type registry containing 
+descriptions of derived classes (drivers); 
+• an entry is created in the registry of registered devices 
+when registering a specific device; a token is 
+transmitted to the device and the device is authorized 
+by the transmitted token; 
+• when the device is turned on it sends the registration 
+token to the server, the server finds it in the registered 
+registry and marks it as active; 
+• then the server finds variables in deployed models 
+having a common base class with the device and returns the data list for connecting to the device 
+(context token, variable token); 
+• the device selects a context (model)/variable and 
+creates an object of the driver class and associates it 
+with the server object.
+The framework itself has some technological limitations: 
+• code execution in the context of the reactive OOP 
+environment requires the lambda functions insertion 
+and a result is “weight” code; 
+• context event processing is performed in a single 
+thread;  
+• annotations in the current form do not completely hide 
+the RP mechanisms it is necessary to follow additional 
+agreements. The classes of reactive fields need to be 
+programmed separately.
+The framework itself has some technological limitations: 
+• code execution in the context of the reactive OOP 
+environment requires the lambda functions insertion 
+and a result is “weight” code; 
+• context event processing is performed in a single 
+thread;  
+• annotations in the current form do not completely hide 
+the RP mechanisms it is necessary to follow additional 
+agreements. The classes of reactive fields need to be 
+programmed separately.
+The specified limitations take place in any technological 
+tool. The initial clarity of the basic states is lost in the syntax 
+structure of the code in case of implementation. 
+However in our case we have a significant bonus ⎯ 
+compatibility with the methodology of object-oriented design 
+standard in software engineering. 
+As above on the example of IoT-architecture is shown. 
