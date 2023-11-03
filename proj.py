@@ -15,7 +15,7 @@ bot = ChatBot(
 
 '''trainer = ListTrainer(bot)
 
-with open("Chatbot/datasets/1.csv",mode = 'r',encoding='utf-8') as dataset:
+with open("C:/Users/Hitesh Dhiman/OneDrive/Desktop/Chatbot/datasets/4.csv",mode = 'r',encoding='utf-8') as dataset:
 
     reader = csv.reader(dataset)
 
