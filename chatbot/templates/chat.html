@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #128C7E;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+
+        .profile p {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Chat Window */
+        .chat-window {
+            flex: 1;
+            background: #fff;
+            border-left: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: #DCF8C6;
+            padding: 10px; /* Add padding for better appearance */
+            border-radius: 10px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: #EDEDED;
+            margin-right: auto;
+        }
+
+        /* Input Bar */
+        .input-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center the input and button horizontally */
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            border-left: 1px solid #ddd;
+        }     
+        
+        .input-form{
+          display: flex;
+          flex : 1;
+          align-items: center;
+          justify-content: center; /* Center the input and button horizontally */
+          padding: 20px;
+        }
+        
+        .input-box{
+          flex : 1;
+          width: 100%;
+          background: #DCF8C6;
+          padding: 10px; /* Add padding for better appearance */
+          border-radius: 10px;
+        }
+
+
+        .input-button{
+            background: #128C7E;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <div class="profile">
+            <img src="user-profile-image.jpg" alt="User Profile">
+            <p>User Name</p>
+        </div>
+        <!-- Add additional sidebar content here -->
+    </div>
+    <div class="chat-window">
+        <div class="messages" id="chatbox">
+            <div class="message bot-message">Hello! How can I help you today?</div>
+            <!-- Add more chat messages here -->
+        </div>
+        <div class="input-bar">
+            <form method="post" id="userInputForm" class="input-form">
+                {% csrf_token %}
+                {{ form.message }}
+                <input type="submit"  class = "input-button" id="post_button" value="Send">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const addDivForm = document.getElementById("userInputForm");
+    const container = document.getElementById("chatbox");
+
+    
+
+    addDivForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const userMessage = document.querySelector('input[name="message"]').value;
+        const csrftoken = getCookie("csrftoken");
+
+        $.ajax({
+            url: "/chat/",  // URL to the chat_view
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+
+            data: { message: userMessage },  // Replace with the user's input if needed
+            success: function (data) {
+                const botResponse = document.createElement("div");
+                const userResponse = document.createElement("div");
+                botResponse.className = "message bot-message";
+                userResponse.className = "message user-message";
+
+                // Populate the new div with the response from the Django server
+                botResponse.textContent = data.response;
+                userResponse.textContent = data.message;
+
+                // Append the new div to the container
+                container.appendChild(userResponse);
+                container.appendChild(botResponse);
+                var targetElement = botResponse;
+
+                // Define the scroll behavior (smooth or auto)
+                var scrollBehavior = 'smooth'; // 'smooth' for smooth scrolling, 'auto' for instant scrolling
+
+    if (targetElement) {
+        targetElement.scrollIntoView({ behavior: scrollBehavior });
+    }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+        document.querySelector('input[name="message"]').value = "";
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === name + "=") {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+</body>
+</html>

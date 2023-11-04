@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url
 
 
-from main.views import(
+from chatbot_app.views import(
     home_screen_view,
+    chat_view,
 )
 
 from account.views import(
@@ -33,4 +35,5 @@ urlpatterns = [
     path('register/',registration_view,name="register"),
     path('logout/',logout_view,name="logout"),
     path('login/', login_view, name="login"),
+    path('chat/', chat_view, name='chat_view'),
 ]
