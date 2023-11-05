@@ -3,167 +3,18 @@
 <head>
     <title>Chatbot</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            margin: 0;
-        }
-
-        .navbar {
-            position: fixed; /* Fixed at the top of the window */
-            top: 0; /* Stick to the top */
-            left: 0; /* Stick to the left */
-            right: 0; /* Stick to the right */
-            display: flex;
-            height: 4%;
-            justify-content: space-between;
-            background: #128C7E;
-            color: #fff;
-            padding: 10px 20px;
-        }
-
-        .container {
-            padding-top: 3%;
-            display: flex;
-            height: 100vh;
-        }
-
-        .sidebar {
-            width: 250px;
-            background: #128C7E;
-            color: #fff;
-            padding: 20px;
-        }
-
-        .profile {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            padding: 0px;
-        }
-
-        .profile-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #fff; /* Background color for the circle */
-            color: #128C7E; /* Text color for the circle */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin-left: 15px;
-        }
-
-        .logout-link {
-            color: #fff;
-            text-decoration: none;
-            background-color: #2bc7b5;
-            padding: 10px;
-            margin-bottom: 10px;
-            margin-left: 0px;
-        }
-
-        .auth-links {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            margin-top: 10px;
-            margin-left: auto; /* Push the links to the right */
-        }
-
-        .login-link,
-        .register-link {
-            color: #fff;
-            text-decoration: none;
-            background-color: #15c0ac;
-            padding: 10px;
-            margin-left: 10px; /* Add some space between the links */
-            margin-bottom: 10px;
-        }
-
-        .welcome{
-            position: fixed;
-            color:#fff;
-            padding-top: 20px;
-            margin-left: 0px;
-        }
-
-        .chat-window {
-            flex:1;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: scroll;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .message {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 10px;
-        }
-
-        .user-message {
-            align-self: flex-end;
-            background: #DCF8C6;
-            padding: 10px; /* Add padding for better appearance */
-            border-radius: 10px;
-        }
-
-        .bot-message {
-            align-self: flex-start;
-            background: #EDEDED;
-            margin-right: auto;
-        }
-
-        .input-bar {
-            position: fixed; /* Fixed at the top of the window */
-            bottom: 0; /* Stick to the top */
-            left: 270px; /* Stick to the left */
-            right: 0px; /* Stick to the right */
-            display: flex;
-            align-items: center;
-            justify-content: center; /* Center the input and button horizontally */
-            padding: 10px;
-        }     
-        
-        .input-form {
-            display: flex;
-            flex: 1;
-            align-items: center;
-            justify-content: center; /* Center the input and button horizontally */
-            padding: 20px;
-        }
-        
-        .input-box {
-            flex: 1;
-            width: 100%;
-            background: #DCF8C6;
-            padding: 10px; /* Add padding for better appearance */
-            border-radius: 10px;
-        }
-
-        .input-button {
-            background: #128C7E;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/custom.css">
 </head>
 <body>
 
 <div class="navbar">
-    <div class="profile-circle">U</div>{% if request.user.is_authenticated %}
+    {% if request.user.is_authenticated %}
+    <div class="profile-circle">{{request.user.username.0}}</div>
+    {% else %}
+    <div class="profile-circle">G</div>
+    {% endif %}
+
+    {% if request.user.is_authenticated %}
     
     <div class="logout-login">
         
@@ -179,13 +30,17 @@
 
 <div class="container">
     <div class="sidebar">
-        
+        {% if request.user.is_authenticated %}
         <div class = "welcome" >Welcome {{request.user.username}}</div>
+        <ul id="chatHistoryList">
+            <!-- Render chat history grouped by date here -->
+        </ul>
+        {% endif %}
         <!-- Add additional sidebar content here -->
     </div>
     <div class="chat-window">
         <div class="messages" id="chatbox">
-            <div class="message bot-message">Hello! How can I help you today?</div>
+            
             <!-- Add more chat messages here -->
         </div>
         <div class="input-bar">
@@ -201,6 +56,64 @@
 <script>
     const addDivForm = document.getElementById("userInputForm");
     const container = document.getElementById("chatbox");
+
+    function renderChatMessages(messages) {
+        const chatbox = document.getElementById('chatbox');
+        chatbox.innerHTML = '';
+
+        for (const message of messages) {
+            const usermessageDiv = document.createElement('div');
+            const botmessageDiv = document.createElement('div');
+            usermessageDiv.className = 'message user-message';
+            botmessageDiv.className = 'message bot-message';
+            usermessageDiv.textContent = message.user;
+            botmessageDiv.textContent = message.bot
+
+            
+
+            chatbox.appendChild(usermessageDiv);
+            chatbox.appendChild(botmessageDiv);
+        }
+    }
+
+    // Load chat history by date and render in the sidebar
+    $.ajax({
+    url: "/load_chats/",
+    method: "GET",
+    success: function (data) {
+        const chatHistoryList = document.getElementById('chatHistoryList');
+
+        data.dates.forEach((chatItem) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = chatItem.date;
+            listItem.className = 'chat-date';
+
+            // Add click handler to load chats for the selected date
+            listItem.addEventListener('click', function () {
+                // Format the selected date as needed
+                const selectedDate = chatItem.date;
+
+                $.ajax({
+                    url: "/load_chat/",
+                    method: "GET",
+                    data: { date: selectedDate },
+                    success: function (chatData) {
+                        console.log(chatData);
+                        renderChatMessages(chatData.chat);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+
+            chatHistoryList.appendChild(listItem);
+        });
+    },
+    error: function (xhr, status, error) {
+        console.error("Error:", error);
+    }
+});
 
     
 

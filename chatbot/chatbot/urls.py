@@ -21,6 +21,8 @@ from django.conf.urls import url
 from chatbot_app.views import(
     home_screen_view,
     chat_view,
+    load_chats,
+    load_chat,
 )
 
 from account.views import(
@@ -36,4 +38,6 @@ urlpatterns = [
     path('logout/',logout_view,name="logout"),
     path('login/', login_view, name="login"),
     path('chat/', chat_view, name='chat_view'),
+    path('load_chats/', load_chats, name='load_chats'),
+    path('load_chat/', load_chat, name='load_chat'),
 ]
