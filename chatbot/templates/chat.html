@@ -9,12 +9,25 @@
             margin: 0;
         }
 
+        .navbar {
+            position: fixed; /* Fixed at the top of the window */
+            top: 0; /* Stick to the top */
+            left: 0; /* Stick to the left */
+            right: 0; /* Stick to the right */
+            display: flex;
+            height: 4%;
+            justify-content: space-between;
+            background: #128C7E;
+            color: #fff;
+            padding: 10px 20px;
+        }
+
         .container {
+            padding-top: 3%;
             display: flex;
             height: 100vh;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 250px;
             background: #128C7E;
@@ -23,26 +36,62 @@
         }
 
         .profile {
-            text-align: center;
-            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0px;
         }
 
-        .profile img {
-            width: 80px;
-            height: 80px;
+        .profile-circle {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
+            background: #fff; /* Background color for the circle */
+            color: #128C7E; /* Text color for the circle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 15px;
         }
 
-        .profile p {
-            font-weight: bold;
+        .logout-link {
+            color: #fff;
+            text-decoration: none;
+            background-color: #2bc7b5;
+            padding: 10px;
+            margin-bottom: 10px;
+            margin-left: 0px;
+        }
+
+        .auth-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
             margin-top: 10px;
+            margin-left: auto; /* Push the links to the right */
         }
 
-        /* Chat Window */
+        .login-link,
+        .register-link {
+            color: #fff;
+            text-decoration: none;
+            background-color: #15c0ac;
+            padding: 10px;
+            margin-left: 10px; /* Add some space between the links */
+            margin-bottom: 10px;
+        }
+
+        .welcome{
+            position: fixed;
+            color:#fff;
+            padding-top: 20px;
+            margin-left: 0px;
+        }
+
         .chat-window {
-            flex: 1;
+            flex:1;
             background: #fff;
-            border-left: 1px solid #ddd;
             display: flex;
             flex-direction: column;
         }
@@ -74,34 +123,34 @@
             margin-right: auto;
         }
 
-        /* Input Bar */
         .input-bar {
+            position: fixed; /* Fixed at the top of the window */
+            bottom: 0; /* Stick to the top */
+            left: 270px; /* Stick to the left */
+            right: 0px; /* Stick to the right */
             display: flex;
             align-items: center;
             justify-content: center; /* Center the input and button horizontally */
             padding: 10px;
-            border-top: 1px solid #ddd;
-            border-left: 1px solid #ddd;
         }     
         
-        .input-form{
-          display: flex;
-          flex : 1;
-          align-items: center;
-          justify-content: center; /* Center the input and button horizontally */
-          padding: 20px;
+        .input-form {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center; /* Center the input and button horizontally */
+            padding: 20px;
         }
         
-        .input-box{
-          flex : 1;
-          width: 100%;
-          background: #DCF8C6;
-          padding: 10px; /* Add padding for better appearance */
-          border-radius: 10px;
+        .input-box {
+            flex: 1;
+            width: 100%;
+            background: #DCF8C6;
+            padding: 10px; /* Add padding for better appearance */
+            border-radius: 10px;
         }
 
-
-        .input-button{
+        .input-button {
             background: #128C7E;
             color: #fff;
             border: none;
@@ -109,17 +158,29 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
     </style>
 </head>
 <body>
 
+<div class="navbar">
+    <div class="profile-circle">U</div>{% if request.user.is_authenticated %}
+    
+    <div class="logout-login">
+        
+        <a class="logout-link" href="{% url 'logout' %}">Logout</a>
+        {% else %}
+        <div class="auth-links">
+            <a class="login-link" href="{% url 'login' %}">Signin</a>
+            <a class="register-link" href="{% url 'register' %}">Register</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
 <div class="container">
     <div class="sidebar">
-        <div class="profile">
-            <img src="user-profile-image.jpg" alt="User Profile">
-            <p>User Name</p>
-        </div>
+        
+        <div class = "welcome" >Welcome {{request.user.username}}</div>
         <!-- Add additional sidebar content here -->
     </div>
     <div class="chat-window">
@@ -131,7 +192,7 @@
             <form method="post" id="userInputForm" class="input-form">
                 {% csrf_token %}
                 {{ form.message }}
-                <input type="submit"  class = "input-button" id="post_button" value="Send">
+                <input type="submit"  class="input-button" id="post_button" value="Send">
             </form>
         </div>
     </div>

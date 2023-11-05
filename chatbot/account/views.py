@@ -24,7 +24,7 @@ def registration_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('home')
+    return redirect('chat_view')
 
 
 
@@ -34,7 +34,7 @@ def login_view(request):
 
     user = request.user
     if user.is_authenticated:
-        return redirect("home")
+        return redirect("chat_view")
     
     if request.POST:
         form = AccountAuthenticationForm(request.POST)
@@ -45,7 +45,7 @@ def login_view(request):
 
             if user:
                 login(request, user)
-                return redirect("home")
+                return redirect("chat_view")
             
     else:
         form = AccountAuthenticationForm()
