@@ -101,3 +101,6 @@ def load_chat(request):
 
 def home_screen_view(request):
     return render(request,"chat.html")
+
+def landing(request):
+    return render(request,"landing.html")

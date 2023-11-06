@@ -156,3 +156,15 @@ body {
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .box{
+            margin: auto;
+            padding: 0;
+            padding-left: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-image: url("https://img.freepik.com/free-vector/global-data-security-personal-data-security-cyber-data-security-online-concept-illustration-internet-security-information-privacy-protection_1150-37336.jpg?size=626&ext=jpg&uid=R123926771&semt=sph");
+            /* border: 2px solid cornflowerblue; */
+        }

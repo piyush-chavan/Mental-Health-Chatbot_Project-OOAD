@@ -5,7 +5,10 @@ from django.contrib.auth import authenticate
 from account.models import Account
 
 class RegistrationForm(UserCreationForm):
-    email = forms.EmailField(max_length=60,help_text="Required")
+    email = forms.EmailField(max_length=60,help_text="Required",widget=forms.TextInput(attrs={'class': 'form-control'}))
+    # username = forms.EmailField(max_length=60,help_text="Required",widget=forms.TextInput(attrs={'class': 'form-control'}))
+    # password1 = forms.EmailField(max_length=60,help_text="Required",widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    # password2 = forms.EmailField(max_length=60,help_text="Required",widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Account
@@ -14,7 +17,8 @@ class RegistrationForm(UserCreationForm):
 
 class AccountAuthenticationForm(forms.ModelForm):
 
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(max_length=60,help_text="Required",widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Account
