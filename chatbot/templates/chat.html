@@ -341,37 +341,47 @@
             const chatbox = document.getElementById('chatbox');
             chatbox.innerHTML = '';
 
-            for (const message of messages) {
-                const user_message = message.user;
-                const bot_message = message.bot;
+            function processMessage(index) {
+                if (index < messages.length) {
+                    const message = messages[index];
+                    const user_message = message.user;
+                    const bot_message = message.bot;
 
-                var regex = /\$(\d+)\$/; // Regular expression to match the number between $
-                var match = regex.exec(user_message);
+                    var regex = /\$(\d+)\$/;
+                    var match = regex.exec(user_message);
 
-                if (match) {
-                    waiting = true;
-                    
-                    var extractedNumber = match[1]; // Extracted number
-                    if (bot_message) {
-                        loadSavedSurvey(extractedNumber, bot_message);
+                    if (match) {
+                        var extractedNumber = match[1];
+                        if (bot_message) {
+                            loadSavedSurvey(extractedNumber, bot_message, () => {
+                                // Continue processing the next message
+                                processMessage(index + 1);
+                            });
+                        }
+                    } else {
+                        const usermessageDiv = document.createElement('div');
+                        const botmessageDiv = document.createElement('div');
+                        usermessageDiv.className = 'message user-message';
+                        botmessageDiv.className = 'message bot-message';
+                        usermessageDiv.textContent = user_message;
+                        botmessageDiv.textContent = bot_message;
+
+                        chatbox.appendChild(usermessageDiv);
+                        chatbox.appendChild(botmessageDiv);
+
+                        // Continue processing the next message
+                        processMessage(index + 1);
                     }
                 } else {
-                    const usermessageDiv = document.createElement('div');
-                    const botmessageDiv = document.createElement('div');
-                    usermessageDiv.className = 'message user-message';
-                    botmessageDiv.className = 'message bot-message';
-                    usermessageDiv.textContent = user_message;
-                    botmessageDiv.textContent = bot_message;
-
-
-
-                    chatbox.appendChild(usermessageDiv);
-                    chatbox.appendChild(botmessageDiv);
+                    // All messages have been processed, call the callback
+                    callback();
                 }
-
-
             }
+
+            // Start processing the messages from the first message
+            processMessage(0);
         }
+        
 
         function renderSurvey(questions, selectedSurvey, labels) {
             const chatbox = document.getElementById('chatbox');
@@ -450,14 +460,14 @@
                     chatbox.appendChild(nextButton);
                     nextButton.addEventListener('click', function () {
                         if (selectedValue !== null) {
-                            
+
                             score += selectedValue;
                             console.log('Score:', score);
                             responseList.push(selectedValue);
 
                             console.log('pushed : ', selectedValue)
                             selectedValue = null; // Reset the selectedValue
-                            
+
                             if (i < questions.length) {
                                 i++;
                                 renderNextQuestion();
@@ -772,7 +782,7 @@
         });
 
 
-        function loadSavedSurvey(surveyNo, options) {
+        function loadSavedSurvey(surveyNo, options, callback) {
             const chat_box = document.getElementById('chatbox');
             const choice = document.createElement('div')
             choice.className = "message bot-message";
@@ -850,7 +860,7 @@
                             survey_labels = data.schizophrenia_labels;
                             break;
                     }
-                    renderSavedSurvey(survey_data, surveyNo, survey_labels, options);
+                    renderSavedSurvey(survey_data, surveyNo, survey_labels, options, callback);
                 },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);
@@ -860,7 +870,7 @@
 
 
 
-        function renderSavedSurvey(questions, selectedSurvey, labels, options_data) {
+        function renderSavedSurvey(questions, selectedSurvey, labels, options_data, callback) {
             const chatbox = document.getElementById('chatbox');
             const heading = document.createElement('div');
             heading.className = "message bot-message";
@@ -868,7 +878,7 @@
             chatbox.appendChild(heading);
             const result = document.createElement('div');
             result.className = "message bot-message";
-            let i = 0;
+            var i = 0;
             var elem;
             const responseList = [];
             var score = 0;
@@ -888,20 +898,19 @@
                     questionDiv.textContent = question;
 
                     chatbox.appendChild(questionDiv);
-
+                    
 
                     const radioButtons = [];
 
-                    const selectedValue = parseInt(options[i]);
+                    let selectedValue = parseInt(options[i]);
                     score += selectedValue;
                     console.log(selectedValue);
-
                     if (selectedSurvey == 2) {
                         if (i == 3 || i == 4 || i == 6 || i == 7) {
                             selectedValue = 4 - selectedValue;
                         }
                     }
-
+                    
                     for (let j = 0; j < labels.length; j++) {
                         const button = document.createElement('input');
                         button.type = 'radio';
@@ -913,7 +922,7 @@
 
                     radioButtons[selectedValue].checked = true;
                     radioButtonIndex++;
-
+                    
 
 
                     for (let j = 0; j < labels.length; j++) {
@@ -995,6 +1004,7 @@
 
             }
             renderNextQuestion();
+            callback();
         }
         function getCookie(name) {
             let cookieValue = null;
