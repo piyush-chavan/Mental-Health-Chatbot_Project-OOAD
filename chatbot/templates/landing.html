@@ -1,119 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <title>Your Website</title>
     <!-- <link rel="stylesheet" href="styles.css"> -->
     <style>
         body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
+        }
 
-nav {
-    background-color: #128C7E;
-    color: #fff;
-    padding: 10px 0;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-nav .logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #fff;
-    text-decoration: none;
-}
+        nav {
+            background-color: #128C7E;
+            color: #fff;
+            padding: 10px 0;
+        }
 
-nav .menu {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+        }
 
-nav .menu li {
-    display: inline;
-    margin-left: 20px;
-}
+        nav .menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
 
-nav .menu a {
-    color: #fff;
-    text-decoration: none;
-}
+        nav .menu li {
+            display: inline;
+            margin-left: 20px;
+        }
 
-header {
-    background-image: url('header-image.jpg'); /* Add your header image URL here */
-    background-size: cover;
-    color: #fff;
-    text-align: center;
-    padding: 200px 0;
-}
+        nav .menu a {
+            color: #fff;
+            text-decoration: none;
+        }
 
-header h1 {
-    font-size: 48px;
-    font-weight: bold;
-}
+        header {
+            background-image: url('header-image.jpg');
+            /* Add your header image URL here */
+            background-size: cover;
+            color: #fff;
+            text-align: center;
+            padding: 200px 0;
+        }
 
-header p {
-    font-size: 24px;
-    margin: 20px 0;
-}
+        header h1 {
+            font-size: 48px;
+            font-weight: bold;
+        }
 
-cta-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #128C7E;
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 18px;
-    margin-top: 20px;
-}
+        header p {
+            font-size: 24px;
+            margin: 20px 0;
+        }
 
-/* Add styles for other sections of your website as needed */
+        cta-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #128C7E;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 20px;
+        }
 
-footer {
-    background-color: #128C7E;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
-}
+        /* Add styles for other sections of your website as needed */
 
+        footer {
+            background-color: #128C7E;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        ul li {
+            margin: 0 20px;
+            font-size: larger;
+            font-weight: bold;
+            font-family: 'Open Sans', sans-serif;
+            padding-top: 100px;
+
+        }
+
+        .container.box1 {
+            display: inline-block;
+            font-family: "arial";
+            font-size: 24px;
+        }
+
+        .typed {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid;
+            width: 0;
+            animation: typing;
+            animation-duration: 1.5s;
+            animation-timing-function: steps(30, end);
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
     </style>
 </head>
+
 <body>
-    <nav>
-        <div class="container" style="display: flex;">
+    <nav style="background-color: #198754;">
+        <div class="container" style="display: flex; padding: 0; padding-top: 20px;">
+            <img src="/static/img/brain_transparent.png" alt="img-logo" width="50px" style="margin-right: 20px;">
             <a href="#" class="logo">ArogyaDost </a>
-            <ul class="menu">
+            <ul class="menu" style="margin-left: auto;">
                 <li><a href="/">Home</a></li>
                 <li><a href="/chat">Chatbot</a></li>
-                <li><a href="/register">Register</a></li>
-                <li><a href="/login">Login</a></li>
+                <li><a href="/register" class="btn btn-outline-info">Register</a></li>
+                <li><a href="/login" class="btn btn-warning">Login</a></li>
             </ul>
         </div>
     </nav>
 
-    <header id="home">
-        <div class="container">
-            <h1>Welcome to Your Website</h1>
-            <p>Your catchphrase or a brief description of your website.</p>
-            <a href="#contact" class="cta-button">Contact Us</a>
-        </div>
-    </header>
 
-    <!-- Other sections of your website go here -->
+    <div style="display: flex;">
+        <div
+            style="width: 50%; text-align: center; font-size: larger; font-family: 'Open Sans', sans-serif; padding-top: 100px;">
+            <!-- <h1 style="font-size: 3rem; font-weight: 700;">Welcome to ArogyaDost</h1><br><br> -->
+            <div class="container box1">
+                <p class="typed" style="font-size: 3rem; font-weight: 700;">Welcome to ArogyaDost</p>
+            </div>
+            <br><br>
+            <h2 style="font-size: 1.5rem; font-weight: 600; color: #198754;">Meet ArogyaDost: Your Mental Health
+                Companion</h2><br>
+            <p style="color: grey;font-weight: 300; margin: 0 150px;">ArogyaDost is your trusted AI chatbot for mental
+                well-being. Take mental health tests and get answers to your FAQs. Your mental health matters, and
+                ArogyaDost is here to support you.</p>
+            <br><br><br>
+            <a href="/chat" class="btn btn-primary"
+                style="width: 60%;height:3rem; font-size: 1.5rem; font-weight: bolder;">Start Chatting Now...<i
+                    class="fa-solid fa-paper-plane fa-beat"></i></a>
+
+        </div>
+        <div style="width: 50%;">
+            <img src="/static/img/vecteezy_unique-modern-flat-design-concept-of-mental-health-for_6150579.jpg" alt=""
+                style="width: 750px;">
+        </div>
+    </div>
+
+
+
 
     <footer>
         <div class="container">
-            <p>&copy; 2023 Your Company Name</p>
+            <p>&copy; Thanks for visiting</p>
         </div>
     </footer>
+
+    <script src="https://kit.fontawesome.com/cafadd1013.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>

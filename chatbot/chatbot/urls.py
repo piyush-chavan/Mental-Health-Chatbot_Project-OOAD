@@ -23,7 +23,9 @@ from chatbot_app.views import(
     chat_view,
     load_chats,
     load_chat,
+    load_survey,
     landing,
+    chat_response,
 )
 
 from account.views import(
@@ -39,8 +41,9 @@ urlpatterns = [
     path('logout/',logout_view,name="logout"),
     path('login/', login_view, name="login"),
     path('chat/', chat_view, name='chat_view'),
+    path('chat_data/', chat_response, name='chat_response'),
     path('load_chats/', load_chats, name='load_chats'),
     path('load_chat/', load_chat, name='load_chat'),
-    path('', landing, name='landing_page')
-
+    path('', landing, name='landing_page'),
+    path('load_survey/', load_survey, name='load_survey'),
 ]

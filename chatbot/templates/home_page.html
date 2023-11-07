@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Chatbot</title>
-    
+
 </head>
+
 <body>
     <div class="container">
         <div class="sidebar">
@@ -14,12 +16,12 @@
             <!-- Add additional sidebar content here -->
         </div>
         <div class="chat-window">
-            
-            
+
+
             <div class="messages">
-                <div class="message bot-message">Hello!</div>  
-                {% if response %}  
-                
+                <div class="message bot-message">Hello!</div>
+                {% if response %}
+
                 <div class="message bot-message">{{ response }}</div>
                 <!-- Add more chat messages here -->
                 {% endif %}
@@ -29,10 +31,11 @@
                     {% csrf_token %}
                     {{ form.message.label_tag }}
                     {{ form.message }}
-                    <input type="submit" id="userMessage" value="Send" >
+                    <input type="submit" id="userMessage" value="Send">
                 </form>
             </div>
         </div>
     </div>
 </body>
+
 </html>

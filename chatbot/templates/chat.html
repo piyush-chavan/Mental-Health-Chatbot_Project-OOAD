@@ -1,180 +1,731 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Chatbot</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <link rel="stylesheet" href="/static/css/custom.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            height: 4%;
+            justify-content: space-between;
+            background: #128C7E;
+            color: #fff;
+            padding: 10px 20px;
+        }
+
+        .container {
+            padding-top: 3%;
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #128C7E;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .profile {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0px;
+        }
+
+        .profile-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #fff;
+            color: #128C7E;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 15px;
+            text-decoration: none;
+        }
+
+        .profile-circle:hover {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #15eb20;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 15px;
+            text-decoration: none;
+        }
+
+        .logout-link {
+            color: #fff;
+            text-decoration: none;
+            background-color: #2bc7b5;
+            padding: 10px;
+            margin-bottom: 10px;
+            margin-left: 0px;
+        }
+
+        .auth-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 10px;
+            margin-left: auto;
+
+        }
+
+        .login-link,
+        .register-link {
+            color: #fff;
+            text-decoration: none;
+            background-color: #15c0ac;
+            padding: 10px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .welcome {
+
+            color: #fff;
+            padding-top: 20px;
+            margin-left: 0px;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .chat-window {
+            flex: 1;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+        }
+
+        .chatHistory {
+
+            margin-top: 20px;
+            list-style: none;
+            height: calc(100% - 150px);
+            overflow-y: auto;
+        }
+
+        .chatHistory::-webkit-scrollbar {
+            width: 12px;
+            margin-left: 5px;
+        }
+
+        .chatHistory::-webkit-scrollbar-thumb {
+            background: #15c0ac;
+            border-radius: 6px;
+        }
+
+        .chatHistory::-webkit-scrollbar-track {
+            background: #128C7E;
+            border-radius: 6px;
+        }
+
+        .chatHistory::-webkit-scrollbar-thumb:hover {
+            background: #15c0ac;
+        }
+
+        li.chat-date {
+            color: #fff;
+            margin-top: 20px;
+            font-size: 20px;
+            border-bottom: 1px solid #fff;
+            cursor: pointer;
+        }
+
+        li.chat-date:hover {
+            background-color: rgb(21, 203, 21);
+
+        }
+
+
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 100px;
+            margin-top: 50px;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: #DCF8C6;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: #EDEDED;
+            margin-right: auto;
+        }
+
+        .input-bar {
+            position: fixed;
+            bottom: 0;
+            left: 270px;
+            right: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .input-form {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .input-box {
+            flex: 1;
+            width: 100%;
+            background: #DCF8C6;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .input-button {
+            background: #128C7E;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .box {
+            margin: auto;
+            padding: 0;
+            padding-left: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-image: url("https://img.freepik.com/free-vector/global-data-security-personal-data-security-cyber-data-security-online-concept-illustration-internet-security-information-privacy-protection_1150-37336.jpg?size=626&ext=jpg&uid=R123926771&semt=sph");
+        }
+
+        .options-container {
+            margin-top: 30px;
+            margin-bottom: 30px;
+
+        }
+
+        .option {
+            margin: 10px;
+        }
+
+        .next-button {
+            align-self: flex-end;
+            background: #DCF8C6;
+            margin-right: 50px;
+            margin-bottom: 20px;
+            padding: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="navbar">
-    {% if request.user.is_authenticated %}
-    <div class="profile-circle">{{request.user.username.0}}</div>
-    {% else %}
-    <div class="profile-circle">G</div>
-    {% endif %}
-
-    {% if request.user.is_authenticated %}
-    
-    <div class="logout-login">
-        
-        <a class="logout-link" href="{% url 'logout' %}">Logout</a>
-        {% else %}
-        <div class="auth-links">
-            <a class="login-link" href="{% url 'login' %}">Signin</a>
-            <a class="register-link" href="{% url 'register' %}">Register</a>
-        </div>
-        {% endif %}
-    </div>
-</div>
-
-<div class="container">
-    <div class="sidebar">
+    <div class="navbar">
         {% if request.user.is_authenticated %}
-        <div class = "welcome" >Welcome {{request.user.username}}</div>
-        <ul id="chatHistoryList">
-            <!-- Render chat history grouped by date here -->
-        </ul>
+        <a class="profile-circle" href="/">{{request.user.username.0}}</a>
+
+        {% else %}
+        <a class="profile-circle" href="/">G</a>
         {% endif %}
-        <!-- Add additional sidebar content here -->
-    </div>
-    <div class="chat-window">
-        <div class="messages" id="chatbox">
-            
-            <!-- Add more chat messages here -->
+
+        <div class="logout-login">
+
         </div>
-        <div class="input-bar">
-            <form method="post" id="userInputForm" class="input-form">
-                {% csrf_token %}
-                {{ form.message }}
-                <input type="submit"  class="input-button" id="post_button" value="Send">
-            </form>
+
+        {% if request.user.is_authenticated %}
+
+        <div class="logout-login">
+            <a class="login-link" id="test_button">Take a Test</a>
+            <a class="logout-link" href="{% url 'logout' %}">Logout</a>
+
+            {% else %}
+            <div class="auth-links">
+                <a class="login-link" id="test_button">Take a Test</a>
+                <a class="login-link" href="{% url 'login' %}">Signin</a>
+                <a class="register-link" href="{% url 'register' %}">Register</a>
+            </div>
+            {% endif %}
         </div>
     </div>
-</div>
 
-<script>
-    const addDivForm = document.getElementById("userInputForm");
-    const container = document.getElementById("chatbox");
+    <div class="container">
+        <div class="sidebar">
+            {% if request.user.is_authenticated %}
+            <div class="welcome">Welcome {{request.user.username}}</div>
+            <ul id="chatHistoryList" class="chatHistory">
+                <!--           ____________________dates___________________                    -->
+            </ul>
+            {% endif %}
+        </div>
 
-    function renderChatMessages(messages) {
-        const chatbox = document.getElementById('chatbox');
-        chatbox.innerHTML = '';
+        <div class="chat-window">
+            <div class="messages" id="chatbox">
 
-        for (const message of messages) {
-            const usermessageDiv = document.createElement('div');
-            const botmessageDiv = document.createElement('div');
-            usermessageDiv.className = 'message user-message';
-            botmessageDiv.className = 'message bot-message';
-            usermessageDiv.textContent = message.user;
-            botmessageDiv.textContent = message.bot
+                <!-- _______________________chat messages_______________________________ -->
+            </div>
+            <div class="input-bar">
+                <form method="post" id="userInputForm" class="input-form">
+                    {% csrf_token %}
+                    {{ form.message }}
+                    <input type="submit" class="input-button" id="post_button" value="Send">
+                </form>
+            </div>
 
-            
+        </div>
+    </div>
 
-            chatbox.appendChild(usermessageDiv);
-            chatbox.appendChild(botmessageDiv);
+    <script>
+        const addDivForm = document.getElementById("userInputForm");
+        const container = document.getElementById("chatbox");
+        const testButton = document.getElementById("test_button");
+        const chatEnabled = true;
+        var radioButtonIndex = 0;
+        var testButtonEnabled = true;
+
+        let surveyCompleted = false;
+        let currentSurveyProgress = 0;
+
+        function renderChatMessages(messages) {
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML = '';
+
+            for (const message of messages) {
+                const usermessageDiv = document.createElement('div');
+                const botmessageDiv = document.createElement('div');
+                usermessageDiv.className = 'message user-message';
+                botmessageDiv.className = 'message bot-message';
+                usermessageDiv.textContent = message.user;
+                botmessageDiv.textContent = message.bot
+
+
+
+                chatbox.appendChild(usermessageDiv);
+                chatbox.appendChild(botmessageDiv);
+            }
         }
-    }
 
-    // Load chat history by date and render in the sidebar
-    $.ajax({
-    url: "/load_chats/",
-    method: "GET",
-    success: function (data) {
-        const chatHistoryList = document.getElementById('chatHistoryList');
+        function renderSurvey(questions, selectedSurvey, labels) {
+            const chatbox = document.getElementById('chatbox');
+            const heading = document.createElement('div');
+            heading.className = "message bot-message";
+            heading.textContent = "Over the last two weeks, how often have you been bothered by any of the following problems?";
+            chatbox.appendChild(heading);
+            const result = document.createElement('div');
+            result.className = "message bot-message";
+            let i = 0;
+            var elem;
 
-        data.dates.forEach((chatItem) => {
-            const listItem = document.createElement('li');
-            listItem.textContent = chatItem.date;
-            listItem.className = 'chat-date';
+            var score = 0;
 
-            // Add click handler to load chats for the selected date
-            listItem.addEventListener('click', function () {
-                // Format the selected date as needed
-                const selectedDate = chatItem.date;
+            function renderNextQuestion() {
+                if (i < questions.length) {
+                    if (elem) {
+                        elem.remove();
+                    }
+                    const question = questions[i];
+                    const questionDiv = document.createElement('div');
+                    const optionContainer = document.createElement('div');
+                    optionContainer.className = 'options-container';
+                    questionDiv.className = 'message bot-message';
+                    questionDiv.textContent = question;
 
-                $.ajax({
-                    url: "/load_chat/",
-                    method: "GET",
-                    data: { date: selectedDate },
-                    success: function (chatData) {
-                        console.log(chatData);
-                        renderChatMessages(chatData.chat);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error:", error);
+                    chatbox.appendChild(questionDiv);
+
+
+                    const radioButtons = [];
+
+                    for (let j = 0; j < labels.length; j++) {
+                        const button = document.createElement('input');
+                        button.type = 'radio';
+                        button.name = 'survey_options' + String(radioButtonIndex);
+                        button.value = j;
+                        radioButtons.push(button);
+                    }
+
+                    radioButtonIndex++;
+
+
+
+                    for (let j = 0; j < labels.length; j++) {
+                        const label = document.createElement('label');
+                        label.textContent = labels[j];
+                        const option = document.createElement('div');
+                        option.className = 'option';
+                        option.appendChild(radioButtons[j]);
+                        option.appendChild(label);
+                        optionContainer.appendChild(option);
+                    }
+
+                    chatbox.appendChild(optionContainer);
+
+                    const nextButton = document.createElement('button');
+                    nextButton.textContent = 'Next';
+                    nextButton.className = 'next-button';
+                    nextButton.id = "next_button";
+
+                    let selectedValue = null;
+
+                    radioButtons.forEach(function (radioButton) {
+                        radioButton.addEventListener('change', function () {
+                            if (this.checked) {
+                                selectedValue = parseInt(this.value); // Parse the value as an integer
+                                if (selectedSurvey == 2) {
+                                    if (i == 3 || i == 4 || i == 6 || i == 7) {
+                                        selectedValue = 4 - selectedValue;
+                                    }
+                                }
+                                console.log(selectedValue);
+                            }
+                        });
+                    });
+                    chatbox.appendChild(nextButton);
+                    nextButton.addEventListener('click', function () {
+                        if (selectedValue !== null) {
+                            i++;
+                            renderNextQuestion();
+                            score += selectedValue;
+                            console.log('Score:', score);
+                            selectedValue = null; // Reset the selectedValue
+                            target_button = document.getElementById('next_button');
+                            target_button.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    });
+
+
+                    elem = nextButton;
+                } else {
+                    // Survey is completed
+                    elem.remove();
+
+                    switch (selectedSurvey) {
+                        case 0:
+                            if (score >= 0 && score <= 4) {
+                                result.textContent = "You have no syptoms of depression";
+                            } else if (score >= 5 && score <= 9) {
+                                result.textContent = "It seems you have mild syptoms of depression";
+                            } else if (score >= 10 && score <= 14) {
+                                result.textContent = "It seems you have moderate syptoms of depression";
+                            } else if (score >= 15 && score <= 19) {
+                                result.textContent = "It seems you have moderately severe depression";
+                            } else {
+                                result.textContent = "Your syptoms seems like of severe depression";
+                            }
+                            break;
+                        case 1:
+                            if (score >= 0 && score <= 7) {
+                                result.textContent = "You have no syptoms of anxiety";
+                            } else {
+                                result.textContent = "You are probably suffering from anxiety disorder";
+                            }
+                            break;
+                        case 2:
+                            if (score >= 0 && score <= 13) {
+                                result.textContent = "It doesn't seem like you are suffering from stress";
+                            } else if (score >= 14 && score <= 26) {
+                                result.textContent = "You seem to be suffering from moderate levels of stress";
+                            } else {
+                                result.textContent = "You seem to be suffering from high levels of stress";
+                            }
+                            break;
+                        case 3:
+                            if (score > 44) {
+                                result.textContent = "It seems you may possibly be suffering from PTSD";
+                            } else {
+                                result.textContent = "It doesn't seem like you are suffering from PTSD";
+                            }
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            break;
+                        case 6:
+                            break;
+                        case 7:
+                            break;
+                    }
+
+
+
+                    chatbox.appendChild(result);
+                    testButtonEnabled = true;
+                }
+            }
+
+            renderNextQuestion();
+
+        }
+
+        function startNewSurvey(surveyData, selectedSurvey, survey_labels) {
+            surveyCompleted = false;
+
+            currentSurveyProgress = 0;
+            renderSurvey(surveyData, selectedSurvey, survey_labels);
+        }
+
+        testButton.addEventListener("click", function () {
+
+            if (testButtonEnabled) {
+                testButtonEnabled = false;
+                const chat_box = document.getElementById('chatbox');
+                const choice = document.createElement('div')
+                choice.className = "message bot-message";
+                choice.textContent = "Enter choice";
+                chat_box.appendChild(choice);
+                const optionContainer = document.createElement('div');
+                optionContainer.className = 'options-container';
+                const radioButtons = [];
+                const labels = [
+                    "Depression", "Anxiety", "Stress", "PTSD", "Addiction", "Bipolar Disorder", "Eating Disorder", "Schizophrenia"
+                ];
+                for (let j = 0; j < labels.length; j++) {
+                    const button = document.createElement('input');
+                    button.type = 'radio';
+                    button.name = 'survey_options' + String(radioButtonIndex);
+                    button.value = j;
+                    radioButtons.push(button);
+                }
+                radioButtonIndex++;
+
+
+                for (let j = 0; j < labels.length; j++) {
+                    const label = document.createElement('label');
+                    label.textContent = labels[j];
+                    const option = document.createElement('div');
+                    option.className = 'option';
+                    option.appendChild(radioButtons[j]);
+                    option.appendChild(label);
+                    optionContainer.appendChild(option);
+                }
+
+                chatbox.appendChild(optionContainer);
+
+                const nextButton = document.createElement('button');
+                nextButton.textContent = 'Next';
+                nextButton.className = 'next-button';
+                nextButton.id = "next_button";
+
+                let selectedValue = null;
+
+                radioButtons.forEach(function (radioButton) {
+                    radioButton.addEventListener('change', function () {
+                        if (this.checked) {
+                            selectedValue = parseInt(this.value); // Parse the value as an integer
+                            console.log(selectedValue);
+                        }
+                    });
+                });
+
+
+                chat_box.appendChild(nextButton);
+                nextButton.addEventListener('click', function () {
+                    if (selectedValue != null) {
+                        nextButton.remove();
+                        $.ajax({
+                            url: "/load_survey/",
+                            method: "GET",
+                            success: function (data) {
+
+                                let survey_data = null;
+                                let survey_labels = null;
+
+                                switch (selectedValue) {
+                                    case 0:
+                                        survey_data = data.depression;
+                                        survey_labels = data.depression_labels;
+                                        break;
+                                    case 1:
+                                        survey_data = data.anxiety;
+                                        survey_labels = data.anxiety_labels;
+                                        break;
+                                    case 2:
+                                        survey_data = data.stress;
+                                        survey_labels = data.stress_labels;
+                                        break;
+                                    case 3:
+                                        survey_data = data.ptsd;
+                                        survey_labels = data.ptsd_labels;
+                                        break;
+                                    case 4:
+                                        survey_data = data.addiction;
+                                        survey_labels = data.addiction_labels;
+                                        break;
+                                    case 5:
+                                        survey_data = data.bipolar;
+                                        survey_labels = data.bipolar_labels;
+                                        break;
+                                    case 6:
+                                        survey_data = data.eating;
+                                        survey_labels = data.eating_labels;
+                                        break;
+                                    case 7:
+                                        survey_data = data.schizophrenia;
+                                        survey_labels = data.schizophrenia_labels;
+                                        break;
+                                }
+
+                                if (surveyCompleted || currentSurveyProgress == 0) {
+                                    startNewSurvey(survey_data, selectedValue, survey_labels);
+                                } else {
+                                    renderSurvey(survey_data, selectedValue, survey_labels);
+                                }
+
+
+                                const nextButton = document.querySelector('.next-button');
+                                if (nextButton) {
+                                    nextButton.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error:", error);
+                            }
+                        });
                     }
                 });
-            });
+            }
 
-            chatHistoryList.appendChild(listItem);
         });
-    },
-    error: function (xhr, status, error) {
-        console.error("Error:", error);
-    }
-});
 
-    
 
-    addDivForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        const userMessage = document.querySelector('input[name="message"]').value;
-        const csrftoken = getCookie("csrftoken");
 
         $.ajax({
-            url: "/chat/",  // URL to the chat_view
-            method: "POST",
-            headers: {
-                "X-CSRFToken": csrftoken
-            },
-
-            data: { message: userMessage },  // Replace with the user's input if needed
+            url: "/load_chats/",
+            method: "GET",
             success: function (data) {
-                const botResponse = document.createElement("div");
-                const userResponse = document.createElement("div");
-                botResponse.className = "message bot-message";
-                userResponse.className = "message user-message";
+                const chatHistoryList = document.getElementById('chatHistoryList');
 
-                // Populate the new div with the response from the Django server
-                botResponse.textContent = data.response;
-                userResponse.textContent = data.message;
+                data.dates.forEach((chatItem) => {
+                    for (var i = 0; i < 10; i++) {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = chatItem.date;
+                        listItem.className = 'chat-date';
 
-                // Append the new div to the container
-                container.appendChild(userResponse);
-                container.appendChild(botResponse);
-                var targetElement = botResponse;
 
-                // Define the scroll behavior (smooth or auto)
-                var scrollBehavior = 'smooth'; // 'smooth' for smooth scrolling, 'auto' for instant scrolling
+                        listItem.addEventListener('click', function () {
 
-    if (targetElement) {
-        targetElement.scrollIntoView({ behavior: scrollBehavior });
-    }
+                            const selectedDate = chatItem.date;
+
+                            $.ajax({
+                                url: "/load_chat/",
+                                method: "GET",
+                                data: { date: selectedDate },
+                                success: function (chatData) {
+                                    console.log(chatData);
+                                    renderChatMessages(chatData.chat);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error:", error);
+                                }
+                            });
+                        });
+
+                        chatHistoryList.appendChild(listItem);
+                    }
+                });
             },
             error: function (xhr, status, error) {
                 console.error("Error:", error);
             }
         });
-        document.querySelector('input[name="message"]').value = "";
-    });
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            const cookies = document.cookie.split(";");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === name + "=") {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+
+
+        addDivForm.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+            const userMessage = document.querySelector('input[name="message"]').value;
+            const csrftoken = getCookie("csrftoken");
+            if (testButtonEnabled) {
+                $.ajax({
+                    url: "/chat_data/",
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": csrftoken
+                    },
+                    data: { message: userMessage },
+                    success: function (data) {
+                        const botResponse = document.createElement("div");
+                        botResponse.className = "message bot-message";
+                        botResponse.textContent = data.response;
+
+                        const userResponse = document.createElement("div");
+                        userResponse.className = "message user-message";
+                        userResponse.textContent = data.message;
+
+                        container.appendChild(userResponse);
+                        container.appendChild(botResponse);
+
+                        // Scroll to the latest message
+                        container.scrollTop = container.scrollHeight;
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            }
+            document.querySelector('input[name="message"]').value = "";
+
+        });
+
+
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === name + "=") {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
                 }
             }
+            return cookieValue;
         }
-        return cookieValue;
-    }
-</script>
+    </script>
 
 </body>
+
 </html>

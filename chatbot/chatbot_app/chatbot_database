@@ -1,0 +1,24 @@
+from chatterbot.storage import SQLStorage
+from chatterbot.conversation import Statement
+from chatterbot import utils
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+class CustomSQLStorage(SQLStorage):
+    def __init__(self, **kwargs):
+        # You can specify the database settings here
+        database_settings = {
+            'database': 'database.sqlite3',
+            'url': BASE_DIR / 'database.sqlite3',
+        }
+        kwargs['database_uri'] = database_settings['url']
+
+        super().__init__(**kwargs)
+
+    def update(self, statement):
+        # Custom update logic if needed
+        pass
+
+def get_statement_model(self):
+    return Statement
