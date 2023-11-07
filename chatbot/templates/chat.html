@@ -349,6 +349,8 @@
                 var match = regex.exec(user_message);
 
                 if (match) {
+                    waiting = true;
+                    
                     var extractedNumber = match[1]; // Extracted number
                     if (bot_message) {
                         loadSavedSurvey(extractedNumber, bot_message);
@@ -848,7 +850,7 @@
                             survey_labels = data.schizophrenia_labels;
                             break;
                     }
-                    renderSavedSurvey(survey_data, surveyNo, survey_labels, options)
+                    renderSavedSurvey(survey_data, surveyNo, survey_labels, options);
                 },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);

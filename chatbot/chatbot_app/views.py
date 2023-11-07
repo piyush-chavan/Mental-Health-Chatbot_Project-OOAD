@@ -14,18 +14,17 @@ chatbot = ChatBot('MyBot')
 custom_trainer = ListTrainer(chatbot)
 
 def trainFromDataset():
-    for x in range(1,9):
-        with open("static/training_data/" + str(x) + ".csv",mode = 'r',encoding='utf-8') as dataset:
+    with open("static/training_data/5.csv",mode = 'r',encoding='utf-8') as dataset:
 
-            reader = csv.reader(dataset)
+        reader = csv.reader(dataset, delimiter="$")
 
-            for row in reader:
+        for row in reader:
 
-                custom_trainer.train(row)
+            custom_trainer.train(row)
 
     return
 
-# trainFromDataset()
+#trainFromDataset()
 
 def chat_response(request):
     if request.method == 'POST':
