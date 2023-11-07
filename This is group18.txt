@@ -1,0 +1,26 @@
+This is group18
+we are Hitesh, Kushal, Chaitanya, Nitin, Indranil and I am piyush
+this is our project ArogyaDost
+a platform where user can analyze his mental health and ask questions related to mental health
+
+
+Lets start by creating a new account
+
+This is the main chat page.
+
+this is the area where you can take a mental health test or you can ask questions from ArogyaDost
+
+You can see your username here
+
+Lets start by taking a test
+
+So i can see my result here
+
+Lets try asking some questions from ArogyaDost
+
+  ---How can I improve my sleep if I have a mental health condition
+-----Can physical health impact mental health
+------I'm feeling really anxious lately and I don't know why
+------how do I deal with someone telling me what to do
+
+From here 

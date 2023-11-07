@@ -24,7 +24,7 @@ def trainFromDataset():
 
     return
 
-trainFromDataset()
+#trainFromDataset()
 
 def chat_response(request):
     if request.method == 'POST':
