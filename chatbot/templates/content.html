@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- <iframe width="720" height="415" style="margin-left: auto;"  src="https://www.youtube.com/embed/tgbNymZ7vqY">
+    </iframe> -->
+
+    <p class="d-inline-flex gap-1">
+        <a class="btn btn-primary" id="btn1" data-bs-toggle="collapse" href="#carouselExampleIndicators" role="button" aria-expanded="false" aria-controls="collapseExample">
+          More Info
+        </a>
+        <button class="btn btn-primary" id="btn2" type="button" data-bs-toggle="collapse" data-bs-target="#carouselExampleIndicators1" aria-expanded="false" aria-controls="collapseExample">
+          Charts & Graphs
+        </button>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+        </div>
+      </div>
+
+    <div id="carouselExampleIndicators" class="carousel slide" style="width: 40%; margin: auto;">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://image.slidesharecdn.com/mentalhealth-160301085212/75/mental-health-1-2048.jpg?cb=1665846086"
+                    class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="https://image.slidesharecdn.com/mentalhealth-160301085212/75/mental-health-2-2048.jpg?cb=1665846086"
+                    class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="https://image.slidesharecdn.com/mentalhealth-160301085212/75/mental-health-3-2048.jpg?cb=1665846086"
+                    class="d-block w-100" alt="...">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    
+
+    <script>
+        // document.querySelector("#carouselExampleIndicators").style.display='none';
+        // document.querySelector("#carouselExampleIndicators1").style.display='none';
+        // document.querySelector("#btn1").addEventListener("click",function(){
+        //     document.querySelector("#carouselExampleIndicators").show();
+        // })
+        // document.querySelector("#btn2").addEventListener("click",function(){
+        //     document.querySelector("#carouselExampleIndicators1").style.display='block';
+        // })
+    </script>
+
+</body>
+
+</html>

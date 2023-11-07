@@ -178,3 +178,9 @@ def home_screen_view(request):
 
 def landing(request):
     return render(request,"landing.html")
+
+def about(request):
+    return render(request,"about.html")
+
+def content(request):
+    return render(request,"content.html")
