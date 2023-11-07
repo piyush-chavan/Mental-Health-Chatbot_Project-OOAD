@@ -129,6 +129,10 @@ def load_survey(request):
 
     return JsonResponse({'anxiety' : GAD7, 'depression' : PHQ9 , 'stress' : stress, 'ptsd':ptsd,'addiction':addiction,'bipolar':bipolar,'eating':eating,'schizophrenia':schizophrenia,
                          'anxiety_labels': GAD7_labels, 'depression_labels':GAD7_labels, 'stress_labels':stress_labels, 'ptsd_labels':ptsd_labels})
+
+def save_survey(request):
+    
+    return
     
 def load_chat(request):
     if request.user.is_authenticated:
