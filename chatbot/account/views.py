@@ -24,7 +24,7 @@ def registration_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('chat_view')
+    return redirect('landing_page')
 
 
 

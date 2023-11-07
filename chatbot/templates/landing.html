@@ -129,17 +129,19 @@
 </head>
 
 <body>
-    <nav style="background-color: #11B8B1;"><!--#198754 -->
+    <nav style="background-color: #128C7E;"><!--#198754 -->
         <div class="container" style="display: flex; padding: 0; padding-top: 20px;">
             <img src="/static/img/brain_transparent.png" alt="img-logo" width="50px" style="margin-right: 20px;">
             <a href="#" class="logo">ArogyaDost </a>
             <ul class="menu" style="margin-left: auto;">
                 <li><a href="/">Home</a></li>
                 <li><a href="/chat">Chatbot</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/content">Learn</a></li>
                 <li><a href="/register" class="btn btn-outline-primary">Register</a></li>
+                {% if request.user.is_authenticated %}
+                <li><a href="/logout" class="btn btn-warning">Logout</a></li>
+                {% else %}
                 <li><a href="/login" class="btn btn-warning">Login</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>
@@ -160,7 +162,7 @@
                 ArogyaDost is here to support you.</p>
             <br><br><br>
             <a href="/chat" class="btn btn-primary"
-                style="width: 60%;height:3rem; font-size: 1.5rem; font-weight: bolder;">Try as a Guest User...<i
+                style="width: 60%;height:3rem; font-size: 1.5rem; font-weight: bolder;">Try now                                                                  <i
                     class="fa-solid fa-paper-plane fa-beat"></i></a>
 
         </div>
