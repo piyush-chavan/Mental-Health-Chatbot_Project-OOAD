@@ -28,6 +28,7 @@ from chatbot_app.views import(
     chat_response,
     about,
     content,
+    save_survey
 )
 
 from account.views import(
@@ -48,6 +49,7 @@ urlpatterns = [
     path('load_chat/', load_chat, name='load_chat'),
     path('', landing, name='landing_page'),
     path('load_survey/', load_survey, name='load_survey'),
-     path('about/',about, name='about'),
-      path('content/',content, name='content'),
+    path('about/',about, name='about'),
+    path('content/',content, name='content'),
+    path('save_survey/',save_survey, name='save_survey'),
 ]

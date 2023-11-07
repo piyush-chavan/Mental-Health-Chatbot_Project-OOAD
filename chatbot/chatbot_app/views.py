@@ -131,8 +131,16 @@ def load_survey(request):
                          'anxiety_labels': GAD7_labels, 'depression_labels':GAD7_labels, 'stress_labels':stress_labels, 'ptsd_labels':ptsd_labels})
 
 def save_survey(request):
-    
-    return
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            user = request.user
+            surveyNo = request.POST.get('survey_no', '')
+            responseList = request.POST.get('response', '')
+            text = '$' + str(surveyNo) + '$'
+            chat_message = ChatMessage(text=text, response=responseList, user=request.user)
+            chat_message.save()
+
+    return render(request, "chat.html")
     
 def load_chat(request):
     if request.user.is_authenticated:
@@ -143,9 +151,12 @@ def load_chat(request):
 
         chat_list = []
         for entry in chat_messages:
+            user = str(entry.text)
+            bot = str(entry.response)
+            
             chat_list.append({
-                'user': str(entry.text),
-                'bot': str(entry.response)
+                'user': user,
+                'bot': bot
             })
         
         return JsonResponse({'chat': chat_list})

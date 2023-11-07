@@ -286,14 +286,15 @@
         {% if request.user.is_authenticated %}
 
         <div class="logout-login">
-            <a class="login-link"style="font-family: 'Playpen Sans', cursive;" id="test_button">Take a Test</a>
-            <a class="logout-link"style="font-family: 'Playpen Sans', cursive;" href="{% url 'logout' %}">Logout</a>
+            <a class="login-link" style="font-family: 'Playpen Sans', cursive;" id="test_button">Take a Test</a>
+            <a class="logout-link" style="font-family: 'Playpen Sans', cursive;" href="{% url 'logout' %}">Logout</a>
 
             {% else %}
             <div class="auth-links">
-                <a class="login-link"style="font-family: 'Playpen Sans', cursive;" id="test_button">Take a Test</a>
-                <a class="login-link"style="font-family: 'Playpen Sans', cursive;" href="{% url 'login' %}">Signin</a>
-                <a class="register-link"style="font-family: 'Playpen Sans', cursive;" href="{% url 'register' %}">Register</a>
+                <a class="login-link" style="font-family: 'Playpen Sans', cursive;" id="test_button">Take a Test</a>
+                <a class="login-link" style="font-family: 'Playpen Sans', cursive;" href="{% url 'login' %}">Signin</a>
+                <a class="register-link" style="font-family: 'Playpen Sans', cursive;"
+                    href="{% url 'register' %}">Register</a>
             </div>
             {% endif %}
         </div>
@@ -341,17 +342,32 @@
             chatbox.innerHTML = '';
 
             for (const message of messages) {
-                const usermessageDiv = document.createElement('div');
-                const botmessageDiv = document.createElement('div');
-                usermessageDiv.className = 'message user-message';
-                botmessageDiv.className = 'message bot-message';
-                usermessageDiv.textContent = message.user;
-                botmessageDiv.textContent = message.bot
+                const user_message = message.user;
+                const bot_message = message.bot;
+
+                var regex = /\$(\d+)\$/; // Regular expression to match the number between $
+                var match = regex.exec(user_message);
+
+                if (match) {
+                    var extractedNumber = match[1]; // Extracted number
+                    if (bot_message) {
+                        loadSavedSurvey(extractedNumber, bot_message);
+                    }
+                } else {
+                    const usermessageDiv = document.createElement('div');
+                    const botmessageDiv = document.createElement('div');
+                    usermessageDiv.className = 'message user-message';
+                    botmessageDiv.className = 'message bot-message';
+                    usermessageDiv.textContent = user_message;
+                    botmessageDiv.textContent = bot_message;
 
 
 
-                chatbox.appendChild(usermessageDiv);
-                chatbox.appendChild(botmessageDiv);
+                    chatbox.appendChild(usermessageDiv);
+                    chatbox.appendChild(botmessageDiv);
+                }
+
+
             }
         }
 
@@ -365,7 +381,7 @@
             result.className = "message bot-message";
             let i = 0;
             var elem;
-
+            const responseList = [];
             var score = 0;
 
             function renderNextQuestion() {
@@ -432,11 +448,18 @@
                     chatbox.appendChild(nextButton);
                     nextButton.addEventListener('click', function () {
                         if (selectedValue !== null) {
-                            i++;
-                            renderNextQuestion();
+                            
                             score += selectedValue;
                             console.log('Score:', score);
+                            responseList.push(selectedValue);
+
+                            console.log('pushed : ', selectedValue)
                             selectedValue = null; // Reset the selectedValue
+                            
+                            if (i < questions.length) {
+                                i++;
+                                renderNextQuestion();
+                            }
                             target_button = document.getElementById('next_button');
                             target_button.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }
@@ -465,15 +488,15 @@
                         case 1:
                             if (score >= 0 && score <= 4) {
                                 result.textContent = "You have minimal level of anxiety";
-                            } 
-                            else if(score >= 5 && score <= 9){
+                            }
+                            else if (score >= 5 && score <= 9) {
                                 result.textContent = "You have mild level of anxiety";
-                            } 
-                            else if(score >= 10 && score <= 14){
+                            }
+                            else if (score >= 10 && score <= 14) {
                                 result.textContent = "You have moderate level of anxiety";
-                            } 
-                            
-                             else {
+                            }
+
+                            else {
                                 result.textContent = "You are probably suffering from severe anxiety disorder";
                             }
                             break;
@@ -507,6 +530,26 @@
 
                     chatbox.appendChild(result);
                     testButtonEnabled = true;
+                    console.log(responseList);
+                    var commaSeparatedString = responseList.join(',');
+                    console.log(commaSeparatedString);
+                    const csrftoken = getCookie("csrftoken");
+                    $.ajax({
+                        type: "POST",
+                        url: "/save_survey/",
+                        headers: {
+                            "X-CSRFToken": csrftoken
+                        },
+                        data: {
+                            "survey_no": selectedSurvey,
+                            "response": commaSeparatedString,
+                        },
+                        success: function (result) {
+                            console.log(result);
+
+                        },
+                        dataType: "json"
+                    });
                 }
             }
 
@@ -579,6 +622,7 @@
                 nextButton.addEventListener('click', function () {
                     if (selectedValue != null) {
                         nextButton.remove();
+
                         $.ajax({
                             url: "/load_survey/",
                             method: "GET",
@@ -726,7 +770,230 @@
         });
 
 
+        function loadSavedSurvey(surveyNo, options) {
+            const chat_box = document.getElementById('chatbox');
+            const choice = document.createElement('div')
+            choice.className = "message bot-message";
+            choice.textContent = "Choose the test you want to take";
+            chat_box.appendChild(choice);
+            const optionContainer = document.createElement('div');
+            optionContainer.className = 'options-container';
+            const radioButtons = [];
+            const labels = [
+                "Depression", "Anxiety", "Stress", "PTSD",
+            ]; //"Addiction", "Bipolar Disorder", "Eating Disorder", "Schizophrenia"
+            for (let j = 0; j < labels.length; j++) {
+                const button = document.createElement('input');
+                button.type = 'radio';
+                button.name = 'survey_options' + String(radioButtonIndex);
+                button.value = j;
+                button.disabled = true;
+                radioButtons.push(button);
+            }
+            radioButtonIndex++;
 
+
+            for (let j = 0; j < labels.length; j++) {
+                const label = document.createElement('label');
+                label.textContent = labels[j];
+                const option = document.createElement('div');
+                option.className = 'option';
+                option.appendChild(radioButtons[j]);
+                option.appendChild(label);
+                optionContainer.appendChild(option);
+            }
+            radioButtons[surveyNo].checked = true;
+            chatbox.appendChild(optionContainer);
+
+            $.ajax({
+                url: "/load_survey/",
+                method: "GET",
+                success: function (data) {
+
+                    let survey_data = null;
+                    let survey_labels = null;
+                    surveyId = parseInt(surveyNo);
+                    switch (surveyId) {
+                        case 0:
+
+                            survey_data = data.depression;
+                            survey_labels = data.depression_labels;
+                            break;
+                        case 1:
+                            survey_data = data.anxiety;
+                            survey_labels = data.anxiety_labels;
+                            break;
+                        case 2:
+                            survey_data = data.stress;
+                            survey_labels = data.stress_labels;
+                            break;
+                        case 3:
+                            survey_data = data.ptsd;
+                            survey_labels = data.ptsd_labels;
+                            break;
+                        case 4:
+                            survey_data = data.addiction;
+                            survey_labels = data.addiction_labels;
+                            break;
+                        case 5:
+                            survey_data = data.bipolar;
+                            survey_labels = data.bipolar_labels;
+                            break;
+                        case 6:
+                            survey_data = data.eating;
+                            survey_labels = data.eating_labels;
+                            break;
+                        case 7:
+                            survey_data = data.schizophrenia;
+                            survey_labels = data.schizophrenia_labels;
+                            break;
+                    }
+                    renderSavedSurvey(survey_data, surveyNo, survey_labels, options)
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+
+
+        function renderSavedSurvey(questions, selectedSurvey, labels, options_data) {
+            const chatbox = document.getElementById('chatbox');
+            const heading = document.createElement('div');
+            heading.className = "message bot-message";
+            heading.textContent = "Over the last two weeks, how often have you been bothered by any of the following problems?";
+            chatbox.appendChild(heading);
+            const result = document.createElement('div');
+            result.className = "message bot-message";
+            let i = 0;
+            var elem;
+            const responseList = [];
+            var score = 0;
+            console.log(options_data);
+            const options = options_data.split(",");
+            console.log("starting");
+            function renderNextQuestion() {
+                if (i < questions.length) {
+
+                    console.log("iteration : ");
+
+                    const question = questions[i];
+                    const questionDiv = document.createElement('div');
+                    const optionContainer = document.createElement('div');
+                    optionContainer.className = 'options-container';
+                    questionDiv.className = 'message bot-message';
+                    questionDiv.textContent = question;
+
+                    chatbox.appendChild(questionDiv);
+
+
+                    const radioButtons = [];
+
+                    const selectedValue = parseInt(options[i]);
+                    score += selectedValue;
+                    console.log(selectedValue);
+
+                    if (selectedSurvey == 2) {
+                        if (i == 3 || i == 4 || i == 6 || i == 7) {
+                            selectedValue = 4 - selectedValue;
+                        }
+                    }
+
+                    for (let j = 0; j < labels.length; j++) {
+                        const button = document.createElement('input');
+                        button.type = 'radio';
+                        button.name = 'survey_options' + String(radioButtonIndex);
+                        button.value = j;
+                        button.disabled = true;
+                        radioButtons.push(button);
+                    }
+
+                    radioButtons[selectedValue].checked = true;
+                    radioButtonIndex++;
+
+
+
+                    for (let j = 0; j < labels.length; j++) {
+                        const label = document.createElement('label');
+                        label.textContent = labels[j];
+                        const option = document.createElement('div');
+                        option.className = 'option';
+                        option.appendChild(radioButtons[j]);
+                        option.appendChild(label);
+                        optionContainer.appendChild(option);
+                    }
+
+                    chatbox.appendChild(optionContainer);
+                    i++;
+                    renderNextQuestion();
+                } else {
+                    console.log('survey complete');
+
+                    switch (parseInt(selectedSurvey)) {
+                        case 0:
+                            if (score >= 0 && score <= 4) {
+                                result.textContent = "You have no symptoms of depression";
+                            } else if (score >= 5 && score <= 9) {
+                                result.textContent = "It seems you have mild symptoms of depression";
+                            } else if (score >= 10 && score <= 14) {
+                                result.textContent = "It seems you have moderate symptoms of depression";
+                            } else if (score >= 15 && score <= 19) {
+                                result.textContent = "It seems you have moderately severe depression";
+                            } else {
+                                result.textContent = "Your symptoms seems like of severe depression";
+                            }
+                            break;
+                        case 1:
+                            if (score >= 0 && score <= 4) {
+                                result.textContent = "You have minimal level of anxiety";
+                            }
+                            else if (score >= 5 && score <= 9) {
+                                result.textContent = "You have mild level of anxiety";
+                            }
+                            else if (score >= 10 && score <= 14) {
+                                result.textContent = "You have moderate level of anxiety";
+                            }
+
+                            else {
+                                result.textContent = "You are probably suffering from severe anxiety disorder";
+                            }
+                            break;
+                        case 2:
+                            if (score >= 0 && score <= 13) {
+                                result.textContent = "It doesn't seem like you are suffering from stress";
+                            } else if (score >= 14 && score <= 26) {
+                                result.textContent = "You seem to be suffering from moderate levels of stress";
+                            } else {
+                                result.textContent = "You seem to be suffering from high levels of stress";
+                            }
+                            break;
+                        case 3:
+                            if (score > 44) {
+                                result.textContent = "It seems you may possibly be suffering from PTSD";
+                            } else {
+                                result.textContent = "It doesn't seem like you are suffering from PTSD";
+                            }
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            break;
+                        case 6:
+                            break;
+                        case 7:
+                            break;
+                    }
+
+
+
+                    chatbox.appendChild(result);
+
+                }
+
+            }
+            renderNextQuestion();
+        }
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== "") {
