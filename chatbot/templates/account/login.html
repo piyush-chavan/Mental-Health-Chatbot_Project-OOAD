@@ -11,13 +11,12 @@
 
 </head>
 
-<body>
+<body style="background-image: url('https://img.freepik.com/premium-vector/geometric-gradient-technology-background_23-2149110132.jpg?size=626&ext=jpg&ga=GA1.1.1826414947.1699228800&semt=ais'); background-repeat: no-repeat; background-size: cover;">
 
     {% block content %}
-    <div class="container box"
-        style="background-image: url('https://img.freepik.com/free-vector/global-data-security-personal-data-security-cyber-data-security-online-concept-illustration-internet-security-information-privacy-protection_1150-37336.jpg?size=626&ext=jpg&uid=R123926771&semt=sph'); background-repeat: no-repeat;">
+    <div class="container" style="margin: auto;">
         <div
-            style="border: 2px solid rgb(170, 0, 255); padding: 20px; border-radius: 10px; background-color:rgba(170, 222, 255, 0.725);">
+            style="border: 2px solid rgb(170, 0, 255);margin: auto; padding: 20px; width: 30%;height: 300px; border-radius: 10px; background-color:rgba(170, 222, 255, 0.725);">
             <h2>Login</h2>
             <form method="post">{% csrf_token %}
                 {% for field in login_form %}

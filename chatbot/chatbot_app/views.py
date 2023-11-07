@@ -103,7 +103,7 @@ def load_survey(request):
     
     stress_labels = ["Never","Almost never","Sometimes","Fairly often","Very often"]
     ptsd = [
-        "Repeated, disturbing memories,thoughts, or images of a stressfulexperience from the past",
+        "Repeated, disturbing memories,thoughts, or images of a stressful experience from the past",
         "Repeated disturbing dreams of a stressful experience from the past",
         "Suddenly acting or feeling as if a stressfull experience were happening again (as if you were reliving it)",
         "Feeling very upset when something reminded you of a stressful experience from the past",

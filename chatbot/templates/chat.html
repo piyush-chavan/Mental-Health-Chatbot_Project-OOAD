@@ -258,16 +258,25 @@
             border-radius: 10px;
         }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playpen+Sans&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
     <div class="navbar">
         {% if request.user.is_authenticated %}
-        <a class="profile-circle" href="/">{{request.user.username.0}}</a>
+        <!-- <a class="profile-circle" href="/">{{request.user.username.0}}</a> -->
+        <a class="profile-circle" href="/"><img src="/static/img/brain_transparent.png" alt="img-logo" width="50px">
+        </a>
+
 
         {% else %}
-        <a class="profile-circle" href="/">G</a>
+        <!-- <a class="profile-circle" href="/">G</a> -->
+        <a class="profile-circle" href="/"><img src="/static/img/brain_transparent.png" alt="img-logo" width="50px">
+        </a><br>
+        <h2 style="font-family: 'Playpen Sans', cursive; ">Guest User</h2>
         {% endif %}
 
         <div class="logout-login">
@@ -277,14 +286,14 @@
         {% if request.user.is_authenticated %}
 
         <div class="logout-login">
-            <a class="login-link" id="test_button">Take a Test</a>
-            <a class="logout-link" href="{% url 'logout' %}">Logout</a>
+            <a class="login-link"style="font-family: 'Playpen Sans', cursive;" id="test_button">Take a Test</a>
+            <a class="logout-link"style="font-family: 'Playpen Sans', cursive;" href="{% url 'logout' %}">Logout</a>
 
             {% else %}
             <div class="auth-links">
-                <a class="login-link" id="test_button">Take a Test</a>
-                <a class="login-link" href="{% url 'login' %}">Signin</a>
-                <a class="register-link" href="{% url 'register' %}">Register</a>
+                <a class="login-link"style="font-family: 'Playpen Sans', cursive;" id="test_button">Take a Test</a>
+                <a class="login-link"style="font-family: 'Playpen Sans', cursive;" href="{% url 'login' %}">Signin</a>
+                <a class="register-link"style="font-family: 'Playpen Sans', cursive;" href="{% url 'register' %}">Register</a>
             </div>
             {% endif %}
         </div>
@@ -293,7 +302,7 @@
     <div class="container">
         <div class="sidebar">
             {% if request.user.is_authenticated %}
-            <div class="welcome">Welcome {{request.user.username}}</div>
+            <div class="welcome" style="font-family: 'Playpen Sans', cursive;">Welcome {{request.user.username}}</div>
             <ul id="chatHistoryList" class="chatHistory">
                 <!--           ____________________dates___________________                    -->
             </ul>
@@ -301,7 +310,7 @@
         </div>
 
         <div class="chat-window">
-            <div class="messages" id="chatbox">
+            <div class="messages" id="chatbox" style="font-family: 'Playpen Sans', cursive;">
 
                 <!-- _______________________chat messages_______________________________ -->
             </div>
@@ -309,7 +318,7 @@
                 <form method="post" id="userInputForm" class="input-form">
                     {% csrf_token %}
                     {{ form.message }}
-                    <input type="submit" class="input-button" id="post_button" value="Send">
+                    <input type="submit" class="input-button btn" id="post_button" value="Send">
                 </form>
             </div>
 
@@ -442,22 +451,30 @@
                     switch (selectedSurvey) {
                         case 0:
                             if (score >= 0 && score <= 4) {
-                                result.textContent = "You have no syptoms of depression";
+                                result.textContent = "You have no symptoms of depression";
                             } else if (score >= 5 && score <= 9) {
-                                result.textContent = "It seems you have mild syptoms of depression";
+                                result.textContent = "It seems you have mild symptoms of depression";
                             } else if (score >= 10 && score <= 14) {
-                                result.textContent = "It seems you have moderate syptoms of depression";
+                                result.textContent = "It seems you have moderate symptoms of depression";
                             } else if (score >= 15 && score <= 19) {
                                 result.textContent = "It seems you have moderately severe depression";
                             } else {
-                                result.textContent = "Your syptoms seems like of severe depression";
+                                result.textContent = "Your symptoms seems like of severe depression";
                             }
                             break;
                         case 1:
-                            if (score >= 0 && score <= 7) {
-                                result.textContent = "You have no syptoms of anxiety";
-                            } else {
-                                result.textContent = "You are probably suffering from anxiety disorder";
+                            if (score >= 0 && score <= 4) {
+                                result.textContent = "You have minimal level of anxiety";
+                            } 
+                            else if(score >= 5 && score <= 9){
+                                result.textContent = "You have mild level of anxiety";
+                            } 
+                            else if(score >= 10 && score <= 14){
+                                result.textContent = "You have moderate level of anxiety";
+                            } 
+                            
+                             else {
+                                result.textContent = "You are probably suffering from severe anxiety disorder";
                             }
                             break;
                         case 2:
@@ -511,14 +528,14 @@
                 const chat_box = document.getElementById('chatbox');
                 const choice = document.createElement('div')
                 choice.className = "message bot-message";
-                choice.textContent = "Enter choice";
+                choice.textContent = "Choose the test you want to take";
                 chat_box.appendChild(choice);
                 const optionContainer = document.createElement('div');
                 optionContainer.className = 'options-container';
                 const radioButtons = [];
                 const labels = [
-                    "Depression", "Anxiety", "Stress", "PTSD", "Addiction", "Bipolar Disorder", "Eating Disorder", "Schizophrenia"
-                ];
+                    "Depression", "Anxiety", "Stress", "PTSD",
+                ]; //"Addiction", "Bipolar Disorder", "Eating Disorder", "Schizophrenia"
                 for (let j = 0; j < labels.length; j++) {
                     const button = document.createElement('input');
                     button.type = 'radio';
@@ -636,32 +653,32 @@
                 const chatHistoryList = document.getElementById('chatHistoryList');
 
                 data.dates.forEach((chatItem) => {
-                    for (var i = 0; i < 10; i++) {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = chatItem.date;
-                        listItem.className = 'chat-date';
+
+                    const listItem = document.createElement('li');
+                    listItem.textContent = chatItem.date;
+                    listItem.className = 'chat-date';
 
 
-                        listItem.addEventListener('click', function () {
+                    listItem.addEventListener('click', function () {
 
-                            const selectedDate = chatItem.date;
+                        const selectedDate = chatItem.date;
 
-                            $.ajax({
-                                url: "/load_chat/",
-                                method: "GET",
-                                data: { date: selectedDate },
-                                success: function (chatData) {
-                                    console.log(chatData);
-                                    renderChatMessages(chatData.chat);
-                                },
-                                error: function (xhr, status, error) {
-                                    console.error("Error:", error);
-                                }
-                            });
+                        $.ajax({
+                            url: "/load_chat/",
+                            method: "GET",
+                            data: { date: selectedDate },
+                            success: function (chatData) {
+                                console.log(chatData);
+                                renderChatMessages(chatData.chat);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error:", error);
+                            }
                         });
+                    });
 
-                        chatHistoryList.appendChild(listItem);
-                    }
+                    chatHistoryList.appendChild(listItem);
+
                 });
             },
             error: function (xhr, status, error) {
